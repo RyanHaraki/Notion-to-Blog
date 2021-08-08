@@ -13,6 +13,7 @@ const Text = ({ text, style }) => {
     return (
       <span
         className={[
+          "py-2",
           bold ? "font-bold" : "",
           code
             ? "font-mono text-sm p-1 rounded-sm text-red-400 bg-gray-100"

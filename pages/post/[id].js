@@ -2,6 +2,7 @@ import { Fragment } from "react";
 import { getDatabase, getPage, getBlocks } from "../../lib/notion";
 import { databaseId } from "../index.js";
 import Text from "../../components/Text";
+import Layout from "../../components/layouts/Layout";
 
 const renderBlock = (block) => {
   const { type, id } = block;
@@ -11,7 +12,7 @@ const renderBlock = (block) => {
     case "paragraph":
       return (
         <p>
-          <Text text={value.text} />
+          <Text text={value.text} style="" />
         </p>
       );
     case "heading_1":
@@ -54,9 +55,11 @@ const renderBlock = (block) => {
           <summary>
             <Text text={value.text} />
           </summary>
-          {value.children?.map((block) => (
-            <Fragment key={block.id}>{renderBlock(block)}</Fragment>
-          ))}
+          <div className="ml-5 mt-1">
+            {value.children?.map((block) => (
+              <Fragment key={block.id}>{renderBlock(block)}</Fragment>
+            ))}
+          </div>
         </details>
       );
     case "child_page":
@@ -68,21 +71,29 @@ const renderBlock = (block) => {
   }
 };
 
+// ACTUAL POST
 export default function Post({ page, blocks }) {
   if (!page || !blocks) {
     return <div />;
   }
   return (
-    <article>
-      <h1>
-        <Text style="text-6xl" text={page.properties.Name.title} />
-      </h1>
-      <section>
-        {blocks.map((block) => (
-          <Fragment key={block.id}>{renderBlock(block)}</Fragment>
-        ))}
-      </section>
-    </article>
+    <Layout page={`${page.properties.Name.title[0].plain_text} || Ultra`}>
+      <div className="flex items-center justify-center pt-12">
+        <article className="w-4/6">
+          <h1>
+            <Text
+              style="text-6xl font-bold"
+              text={page.properties.Name.title}
+            />
+          </h1>
+          <section>
+            {blocks.map((block) => (
+              <Fragment key={block.id}>{renderBlock(block)}</Fragment>
+            ))}
+          </section>
+        </article>
+      </div>
+    </Layout>
   );
 }
 
